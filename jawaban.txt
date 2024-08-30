@@ -1,0 +1,138 @@
+nomor 1
+MariaDB [(none)]> create database myshop;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> use myshop;
+Database changed
+
+
+nomor 2:
+MariaDB [myshop]> CREATE TABLE users (
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     email VARCHAR(255),
+    ->     password VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.009 sec)
+
+MariaDB [myshop]> CREATE TABLE categories (
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(255)
+    -> );
+Query OK, 0 rows affected (0.010 sec)
+
+MariaDB [myshop]> CREATE TABLE items (
+    ->     id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     name VARCHAR(255),
+    ->     description VARCHAR(255),
+    ->     price INT,
+    ->     stock INT,
+    ->     category_id INT,
+    ->     FOREIGN KEY (category_id) REFERENCES categories(id)
+    -> );
+Query OK, 0 rows affected (0.026 sec)
+
+
+
+nomor 3:
+MariaDB [myshop]> INSERT INTO users (name, email, password) VALUES
+    -> ('John Doe', 'john@doe.com', 'john123'),
+    -> ('Jane Doe', 'jane@doe.com', 'jenita123');
+Query OK, 2 rows affected (0.061 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+MariaDB [myshop]> INSERT INTO categories (name) VALUES
+    -> ('gadget'),
+    -> ('cloth'),
+    -> ('men'),
+    -> ('women'),
+    -> ('branded');
+Query OK, 5 rows affected (0.005 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+MariaDB [myshop]> INSERT INTO items (name, description, price, stock, category_id) VALUES
+    -> ('Sumsang b50', 'hape keren dari merek sumsang', 4000000, 100, 1),
+    -> ('Uniklooh', 'baju keren dari brand ternama', 500000, 50, 2),
+    -> ('IMHO Watch', 'jam tangan anak yang jujur banget', 2000000, 10, 1);
+Query OK, 3 rows affected (0.004 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+
+
+
+
+nomor 4:
+SELECT id, name, email FROM users;
++----+----------+--------------+
+| id | name     | email        |
++----+----------+--------------+
+|  1 | John Doe | john@doe.com |
+|  2 | Jane Doe | jane@doe.com |
++----+----------+--------------+
+2 rows in set (0.004 sec)
+
+MariaDB [myshop]> SELECT *
+    -> FROM items
+    -> WHERE harga > 1000000;
+ERROR 1054 (42S22): Unknown column 'harga' in 'where clause'
+MariaDB [myshop]> SELECT *
+    -> FROM items
+    -> WHERE price > 1000000;
++----+-------------+-----------------------------------+---------+-------+-------------+
+| id | name        | description                       | price   | stock | category_id |
++----+-------------+-----------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merek sumsang     | 4000000 |   100 |           1 |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 |           1 |
++----+-------------+-----------------------------------+---------+-------+-------------+
+2 rows in set (0.001 sec)
+
+MariaDB [myshop]> SELECT *
+    -> FROM items
+    -> WHERE name LIKE '%uniklo%';
++----+----------+-------------------------------+--------+-------+-------------+
+| id | name     | description                   | price  | stock | category_id |
++----+----------+-------------------------------+--------+-------+-------------+
+|  2 | Uniklooh | baju keren dari brand ternama | 500000 |    50 |           2 |
++----+----------+-------------------------------+--------+-------+-------------+
+1 row in set (0.002 sec)
+
+
+
+MariaDB [myshop]> SELECT
+    ->     items.id,
+    ->     items.name AS item_name,
+    ->     items.description,
+    ->     items.price,
+    ->     items.stock,
+    ->     categories.name AS category_name
+    -> FROM
+    ->     items
+    -> JOIN
+    ->     categories ON items.category_id = categories.id;
++----+-------------+-----------------------------------+---------+-------+---------------+
+| id | item_name   | description                       | price   | stock | category_name |
++----+-------------+-----------------------------------+---------+-------+---------------+
+|  1 | Sumsang b50 | hape keren dari merek sumsang     | 4000000 |   100 | gadget        |
+|  2 | Uniklooh    | baju keren dari brand ternama     |  500000 |    50 | cloth         |
+|  3 | IMHO Watch  | jam tangan anak yang jujur banget | 2000000 |    10 | gadget        |
++----+-------------+-----------------------------------+---------+-------+---------------+
+3 rows in set (0.004 sec)
+
+
+
+
+
+
+nomor 5:
+MariaDB [myshop]> UPDATE items
+    -> SET price = 2500000
+    -> WHERE name = 'Sumsang b50';
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+MariaDB [myshop]> SELECT * FROM items WHERE name = 'Sumsang b50';
++----+-------------+-------------------------------+---------+-------+-------------+
+| id | name        | description                   | price   | stock | category_id |
++----+-------------+-------------------------------+---------+-------+-------------+
+|  1 | Sumsang b50 | hape keren dari merek sumsang | 2500000 |   100 |           1 |
++----+-------------+-------------------------------+---------+-------+-------------+
+1 row in set (0.002 sec)
