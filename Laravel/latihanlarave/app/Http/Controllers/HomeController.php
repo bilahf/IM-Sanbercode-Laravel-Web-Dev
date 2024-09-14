@@ -6,18 +6,23 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index(){
-        return view('home');
-    }
-    public function register(){
-        return view('page.register');
-    }
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
-    public function send(Request $request){
-        $fname = $request->input('fnama');
-        $lname = $request->input('lnama');
-
-        return view('page.welcome', ['fname'=> $fname, 'lname'=>$lname]);
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function index()
+    {
+        return view('welcome');
     }
-
 }
